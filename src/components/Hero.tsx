@@ -12,6 +12,14 @@ const Hero = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        // Check screen size - Only run game on larger screens
+        const isLargeScreen = window.innerWidth >= 1024; // Typical laptop width threshold
+
+        if (!isLargeScreen) {
+            // Don't initialize game on small screens
+            return;
+        }
+
         // Set canvas dimensions
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
@@ -33,27 +41,27 @@ const Hero = () => {
         // Targets array
         const targets: { x: number, y: number, size: number }[] = [];
 
-        // Create initial targets away from text
-        for (let i = 0; i < 5; i++) {
+        // Create initial targets away from text - REDUCED to 3
+        for (let i = 0; i < 3; i++) {
             // Define text area to avoid
             const textAreaX = canvas.width / 2;
             const textAreaY = canvas.height / 2;
             const textAreaWidth = canvas.width * 0.7;  // 70% of canvas width
             const textAreaHeight = canvas.height * 0.4; // 40% of canvas height
             const headerHeight = 100; // Approximate header height
-            
+
             // Generate random position
             let x, y;
             do {
                 x = Math.random() * canvas.width;
                 y = Math.random() * (canvas.height - headerHeight) + headerHeight; // Keep targets below header
             } while (
-                x > textAreaX - textAreaWidth/2 && 
-                x < textAreaX + textAreaWidth/2 && 
-                y > textAreaY - textAreaHeight/2 && 
-                y < textAreaY + textAreaHeight/2
+                x > textAreaX - textAreaWidth / 2 &&
+                x < textAreaX + textAreaWidth / 2 &&
+                y > textAreaY - textAreaHeight / 2 &&
+                y < textAreaY + textAreaHeight / 2
             );
-            
+
             targets.push({
                 x: x,
                 y: y,
@@ -119,29 +127,32 @@ const Hero = () => {
                         targets.splice(j, 1);
                         bullets.splice(i, 1);
 
-                        // Create a new target away from text
-                        const textAreaX = canvas.width / 2;
-                        const textAreaY = canvas.height / 2;
-                        const textAreaWidth = canvas.width * 0.7;
-                        const textAreaHeight = canvas.height * 0.4;
-                        const headerHeight = 100;
-                        
-                        let x, y;
-                        do {
-                            x = Math.random() * canvas.width;
-                            y = Math.random() * (canvas.height - headerHeight) + headerHeight;
-                        } while (
-                            x > textAreaX - textAreaWidth/2 && 
-                            x < textAreaX + textAreaWidth/2 && 
-                            y > textAreaY - textAreaHeight/2 && 
-                            y < textAreaY + textAreaHeight/2
-                        );
-                        
-                        targets.push({
-                            x: x,
-                            y: y,
-                            size: 15
-                        });
+                        // Only respawn if we have fewer than 3 targets
+                        if (targets.length < 3) {
+                            // Create a new target away from text
+                            const textAreaX = canvas.width / 2;
+                            const textAreaY = canvas.height / 2;
+                            const textAreaWidth = canvas.width * 0.7;
+                            const textAreaHeight = canvas.height * 0.4;
+                            const headerHeight = 100;
+
+                            let x, y;
+                            do {
+                                x = Math.random() * canvas.width;
+                                y = Math.random() * (canvas.height - headerHeight) + headerHeight;
+                            } while (
+                                x > textAreaX - textAreaWidth / 2 &&
+                                x < textAreaX + textAreaWidth / 2 &&
+                                y > textAreaY - textAreaHeight / 2 &&
+                                y < textAreaY + textAreaHeight / 2
+                            );
+
+                            targets.push({
+                                x: x,
+                                y: y,
+                                size: 15
+                            });
+                        }
 
                         break;
                     }
@@ -284,10 +295,26 @@ const Hero = () => {
         // Start game loop
         const animationId = requestAnimationFrame(gameLoop);
 
+        // Add window resize listener to handle responsive behavior
+        const handleResize = () => {
+            if (window.innerWidth < 1024) {
+                // Clean up game if screen becomes too small
+                window.removeEventListener('keydown', handleKeyDown);
+                window.removeEventListener('keyup', handleKeyUp);
+                cancelAnimationFrame(animationId);
+
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+
         // Cleanup
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
+            window.removeEventListener('resize', handleResize);
             cancelAnimationFrame(animationId);
         };
     }, []);
@@ -331,7 +358,9 @@ const Hero = () => {
                     Software Engineer @ AWS Dublin 🇮🇪
                 </motion.h2>
 
-                <div className="controls-hint">Use WASD to move tank, E to shoot</div>
+                {window.innerWidth >= 1024 && (
+                    <div className="controls-hint">Use WASD to move tank, E to shoot</div>
+                )}
             </motion.div>
         </motion.section>
     );
