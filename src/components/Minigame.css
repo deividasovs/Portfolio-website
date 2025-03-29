@@ -1,0 +1,53 @@
+.minigame-section {
+    padding: 40px 20px 80px;
+    text-align: center;
+}
+
+.minigame-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.minigame-container h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #64ffda;
+}
+
+.instructions {
+    margin-bottom: 20px;
+    color: #ccd6f6;
+}
+
+.score-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #64ffda;
+    margin-bottom: 15px;
+}
+
+.game-canvas {
+    width: 100%;
+    height: 400px;
+    background-color: rgba(10, 25, 47, 0.7);
+    border: 2px solid #64ffda;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.start-button {
+    padding: 12px 24px;
+    background-color: #64ffda;
+    color: #0a192f;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+}

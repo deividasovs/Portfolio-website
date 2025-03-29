@@ -3,9 +3,19 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import '../components/Projects.css';
 
+// Define the interface for a project
+interface Project {
+    title: string;
+    description: string;
+    tech: string[];
+    image: string;
+    github: string;
+    demo: string;  // Note: Changed from 'live' to 'demo' to match usage in JSX
+}
+
 const ProjectsPage = () => {
     // Copy the projects array from your Projects component
-    const projects = [
+    const projects: Project[] = [
         // Add your projects here, copied from Projects.tsx
     ];
 

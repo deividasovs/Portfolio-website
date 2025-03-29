@@ -3,15 +3,25 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import './Projects.css';
 
+// Add at the top of the file
+interface Project {
+    title: string;
+    description: string;
+    tech: string[];
+    image: string;
+    github: string;
+    demo: string;
+}
+
 const Projects = () => {
-    const projects = [
+    const projects: Project[] = [
         {
             title: "AI-Powered Trading Platform",
             description: "A sophisticated trading platform using machine learning algorithms to predict market trends and execute automated trades.",
             tech: ["Python", "TensorFlow", "React", "Node.js"],
             image: "/images/trading-platform.jpg",
             github: "https://github.com/yourusername/trading-platform",
-            live: "https://trading-platform.com"
+            demo: "https://trading-platform.com"
         },
         {
             title: "Real-time Collaboration Tool",
@@ -19,7 +29,7 @@ const Projects = () => {
             tech: ["TypeScript", "Socket.io", "Redis", "React"],
             image: "/images/collab-tool.jpg",
             github: "https://github.com/yourusername/collab-tool",
-            live: "https://collab-tool.com"
+            demo: "https://collab-tool.com"
         },
         {
             title: "Blockchain Voting System",
@@ -27,7 +37,7 @@ const Projects = () => {
             tech: ["Solidity", "Web3.js", "React", "Node.js"],
             image: "/images/blockchain-voting.jpg",
             github: "https://github.com/yourusername/blockchain-voting",
-            live: "https://blockchain-voting.com"
+            demo: "https://blockchain-voting.com"
         },
         // Add more projects as needed
     ];
