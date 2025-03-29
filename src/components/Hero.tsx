@@ -1,8 +1,297 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import './Hero.css';
 
 const Hero = () => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        // Set canvas dimensions
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        // Tank properties
+        const tank = {
+            x: 50,
+            y: 100,
+            size: 30,
+            color: '#64ffda',
+            speed: 4,
+            direction: 0, // in radians, 0 = right
+            turretLength: 20
+        };
+
+        // Bullets array
+        const bullets: { x: number, y: number, speed: number, direction: number }[] = [];
+
+        // Targets array
+        const targets: { x: number, y: number, size: number }[] = [];
+
+        // Create initial targets away from text
+        for (let i = 0; i < 5; i++) {
+            // Define text area to avoid
+            const textAreaX = canvas.width / 2;
+            const textAreaY = canvas.height / 2;
+            const textAreaWidth = canvas.width * 0.7;  // 70% of canvas width
+            const textAreaHeight = canvas.height * 0.4; // 40% of canvas height
+            const headerHeight = 100; // Approximate header height
+            
+            // Generate random position
+            let x, y;
+            do {
+                x = Math.random() * canvas.width;
+                y = Math.random() * (canvas.height - headerHeight) + headerHeight; // Keep targets below header
+            } while (
+                x > textAreaX - textAreaWidth/2 && 
+                x < textAreaX + textAreaWidth/2 && 
+                y > textAreaY - textAreaHeight/2 && 
+                y < textAreaY + textAreaHeight/2
+            );
+            
+            targets.push({
+                x: x,
+                y: y,
+                size: 15
+            });
+        }
+
+        // Keys state
+        const keys = {
+            w: false,
+            a: false,
+            s: false,
+            d: false,
+            e: false
+        };
+
+        // Key event listeners
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'w') keys.w = true;
+            if (e.key === 'a') keys.a = true;
+            if (e.key === 's') keys.s = true;
+            if (e.key === 'd') keys.d = true;
+            if (e.key === 'e') keys.e = true;
+        };
+
+        const handleKeyUp = (e: KeyboardEvent) => {
+            if (e.key === 'w') keys.w = false;
+            if (e.key === 'a') keys.a = false;
+            if (e.key === 's') keys.s = false;
+            if (e.key === 'd') keys.d = false;
+            if (e.key === 'e') keys.e = false;
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        // Shooting logic
+        let lastShot = 0;
+        const shoot = (time: number) => {
+            if (keys.e && time - lastShot > 300) {
+                const bullet = {
+                    x: tank.x + Math.cos(tank.direction) * tank.turretLength,
+                    y: tank.y + Math.sin(tank.direction) * tank.turretLength,
+                    speed: 7,
+                    direction: tank.direction
+                };
+                bullets.push(bullet);
+                lastShot = time;
+            }
+        };
+
+        // Collision detection
+        const checkCollisions = () => {
+            // Check bullet-target collisions
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                for (let j = targets.length - 1; j >= 0; j--) {
+                    const dx = bullets[i].x - targets[j].x;
+                    const dy = bullets[i].y - targets[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < targets[j].size) {
+                        // Remove hit target and bullet
+                        targets.splice(j, 1);
+                        bullets.splice(i, 1);
+
+                        // Create a new target away from text
+                        const textAreaX = canvas.width / 2;
+                        const textAreaY = canvas.height / 2;
+                        const textAreaWidth = canvas.width * 0.7;
+                        const textAreaHeight = canvas.height * 0.4;
+                        const headerHeight = 100;
+                        
+                        let x, y;
+                        do {
+                            x = Math.random() * canvas.width;
+                            y = Math.random() * (canvas.height - headerHeight) + headerHeight;
+                        } while (
+                            x > textAreaX - textAreaWidth/2 && 
+                            x < textAreaX + textAreaWidth/2 && 
+                            y > textAreaY - textAreaHeight/2 && 
+                            y < textAreaY + textAreaHeight/2
+                        );
+                        
+                        targets.push({
+                            x: x,
+                            y: y,
+                            size: 15
+                        });
+
+                        break;
+                    }
+                }
+            }
+        };
+
+        // Game loop
+        const gameLoop = (time: number) => {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Move tank based on key presses
+            if (keys.w) {
+                tank.x += Math.cos(tank.direction) * tank.speed;
+                tank.y += Math.sin(tank.direction) * tank.speed;
+            }
+            if (keys.s) {
+                tank.x -= Math.cos(tank.direction) * tank.speed;
+                tank.y -= Math.sin(tank.direction) * tank.speed;
+            }
+            if (keys.a) {
+                tank.direction -= 0.05;
+            }
+            if (keys.d) {
+                tank.direction += 0.05;
+            }
+
+            // Keep tank within canvas and below header
+            const headerHeight = 100; // Approximate header height
+            tank.x = Math.max(tank.size / 2, Math.min(tank.x, canvas.width - tank.size / 2));
+            tank.y = Math.max(headerHeight + tank.size / 2, Math.min(tank.y, canvas.height - tank.size / 2));
+
+            // Handle shooting
+            shoot(time);
+
+            // Update bullets
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                bullets[i].x += Math.cos(bullets[i].direction) * bullets[i].speed;
+                bullets[i].y += Math.sin(bullets[i].direction) * bullets[i].speed;
+
+                // Remove bullets that are out of bounds
+                if (bullets[i].x < 0 || bullets[i].x > canvas.width ||
+                    bullets[i].y < 0 || bullets[i].y > canvas.height) {
+                    bullets.splice(i, 1);
+                }
+            }
+
+            // Check collisions
+            checkCollisions();
+
+            // Draw targets as bullseyes
+            targets.forEach(target => {
+                // Outer circle
+                ctx.beginPath();
+                ctx.arc(target.x, target.y, target.size, 0, Math.PI * 2);
+                ctx.fillStyle = '#233554'; // Dark blue from theme
+                ctx.fill();
+                ctx.strokeStyle = '#64ffda';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.closePath();
+
+                // Middle circle
+                ctx.beginPath();
+                ctx.arc(target.x, target.y, target.size * 0.7, 0, Math.PI * 2);
+                ctx.fillStyle = '#112240'; // Darker blue
+                ctx.fill();
+                ctx.closePath();
+
+                // Inner circle
+                ctx.beginPath();
+                ctx.arc(target.x, target.y, target.size * 0.4, 0, Math.PI * 2);
+                ctx.fillStyle = '#64ffda'; // Accent color (muted teal)
+                ctx.fill();
+                ctx.closePath();
+
+                // Center dot
+                ctx.beginPath();
+                ctx.arc(target.x, target.y, target.size * 0.15, 0, Math.PI * 2);
+                ctx.fillStyle = '#e6f1ff'; // Light color for center
+                ctx.fill();
+                ctx.closePath();
+            });
+
+            // Draw bullets with softer colors
+            bullets.forEach(bullet => {
+                ctx.beginPath();
+                ctx.arc(bullet.x, bullet.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(100, 255, 218, 0.7)'; // Semi-transparent teal
+                ctx.fill();
+                ctx.closePath();
+            });
+
+            // Draw tank body
+            ctx.save();
+            ctx.translate(tank.x, tank.y);
+            ctx.rotate(tank.direction);
+
+            // Tank body (main rectangle)
+            ctx.beginPath();
+            ctx.rect(-tank.size / 2, -tank.size / 3, tank.size, tank.size / 1.5);
+            ctx.fillStyle = '#8892b0'; // More subtle blue-gray color
+            ctx.fill();
+            ctx.strokeStyle = '#64ffda';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.closePath();
+
+            // Tank tracks
+            ctx.beginPath();
+            ctx.rect(-tank.size / 2, -tank.size / 2, tank.size, tank.size / 6);
+            ctx.rect(-tank.size / 2, tank.size / 3, tank.size, tank.size / 6);
+            ctx.fillStyle = '#495670'; // Darker color for tracks
+            ctx.fill();
+            ctx.closePath();
+
+            // Tank turret (base)
+            ctx.beginPath();
+            ctx.arc(0, 0, tank.size / 4, 0, Math.PI * 2);
+            ctx.fillStyle = '#64ffda';
+            ctx.fill();
+            ctx.closePath();
+
+            // Tank turret (cannon)
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(tank.turretLength, 0);
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#ccd6f6';
+            ctx.stroke();
+            ctx.closePath();
+
+            ctx.restore();
+
+            // Continue game loop
+            requestAnimationFrame(gameLoop);
+        };
+
+        // Start game loop
+        const animationId = requestAnimationFrame(gameLoop);
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+            cancelAnimationFrame(animationId);
+        };
+    }, []);
+
     return (
         <motion.section
             className="hero"
@@ -10,9 +299,10 @@ const Hero = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
         >
+            <canvas ref={canvasRef} className="hero-game-canvas" />
             <motion.div
                 className="hero-content"
-                initial={{ y: 0 }}
+                initial={{ y: 100 }}
                 animate={{ y: 0 }}
                 transition={{ type: "spring", stiffness: 100 }}
             >
@@ -38,8 +328,10 @@ const Hero = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
                 >
-                    Software Engineer
+                    Software Engineer @ AWS Dublin 🇮🇪
                 </motion.h2>
+
+                <div className="controls-hint">Use WASD to move tank, E to shoot</div>
             </motion.div>
         </motion.section>
     );
