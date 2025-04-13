@@ -71,11 +71,11 @@ const Projects = () => {
                     </motion.div>
                 ))}
             </div>
-            <div className="view-all-projects">
+            {/* <div className="view-all-projects">
                 <Link to="/projects" className="projects-link">
                     View All Projects →
                 </Link>
-            </div>
+            </div> */}
         </section>
     );
 };

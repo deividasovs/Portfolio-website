@@ -6,19 +6,19 @@ import './Experience.css';
 const Experience = () => {
     const experiences = [
         {
-            company: "Tech Giant Corp",
-            position: "Senior Software Engineer",
-            period: "2020 - Present",
+            company: "Amazon Web Services",
+            position: "Software Engineer",
+            period: "2024 - Present",
             description: "Led development of high-performance trading systems using React and TypeScript. Improved system efficiency by 40%.",
-            tech: ["React", "TypeScript", "Node.js", "AWS"],
-            color: "#FF5757" // Bright red
+            tech: [],//["React", "TypeScript", "Node.js", "AWS"],
+            color: "#5CE1E6" // Bright red
         },
         {
-            company: "Innovation Startup",
-            position: "Full Stack Developer",
-            period: "2018 - 2020",
+            company: "Amazon Web Services",
+            position: "Software Engineer",
+            period: "2023 - 2024",
             description: "Built scalable microservices architecture. Implemented real-time data processing pipeline.",
-            tech: ["Python", "Django", "React", "Docker"],
+            tech: [], //["Python", "Django", "React", "Docker"],
             color: "#5CE1E6" // Bright cyan
         },
         // Add more experiences
@@ -54,17 +54,7 @@ const Experience = () => {
                 >
                     Professional Experience
                 </motion.h2>
-                <motion.div
-                    className="floating-emoji"
-                    animate={{
-                        y: [0, -20, 0],
-                        rotate: [0, 10, -10, 0]
-                    }}
-                    transition={{
-                        repeat: Infinity,
-                        duration: 3
-                    }}
-                >
+                <motion.div>
                     💻✨
                 </motion.div>
             </motion.div>

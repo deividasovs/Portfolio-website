@@ -36,13 +36,13 @@ const ParticleBackground = () => {
                     },
                     move: {
                         enable: true,
-                        speed: 1,
+                        speed: 0.5,
                     },
                     size: {
                         value: 2,
                     },
                     opacity: {
-                        value: 0.3,
+                        value: 0.2,
                     },
                 },
             }}

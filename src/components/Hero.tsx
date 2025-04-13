@@ -361,6 +361,20 @@ const Hero = () => {
                 {window.innerWidth >= 1024 && (
                     <div className="controls-hint">Use WASD to move tank, E to shoot</div>
                 )}
+
+                <motion.div
+                    className="social-links"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.3 }}
+                >
+                    <a href="https://github.com/YourGitHubUsername" target="_blank" rel="noopener noreferrer">
+                        <i className="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/YourLinkedInUsername" target="_blank" rel="noopener noreferrer">
+                        <i className="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                </motion.div>
             </motion.div>
         </motion.section>
     );
