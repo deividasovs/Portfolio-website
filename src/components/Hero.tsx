@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import './Hero.css';
 
 const Hero = () => {
@@ -43,23 +42,25 @@ const Hero = () => {
 
         // Create initial targets away from text - REDUCED to 3
         for (let i = 0; i < 3; i++) {
-            // Define text area to avoid
+            // Define text area to avoid with larger buffer zones
             const textAreaX = canvas.width / 2;
             const textAreaY = canvas.height / 2;
-            const textAreaWidth = canvas.width * 0.7;  // 70% of canvas width
-            const textAreaHeight = canvas.height * 0.4; // 40% of canvas height
-            const headerHeight = 100; // Approximate header height
+            const textAreaWidth = canvas.width * 0.8;  // Increased from 0.7 to 0.8
+            const textAreaHeight = canvas.height * 0.5; // Increased from 0.4 to 0.5
+            const headerHeight = 150; // Increased from 100 to 150
+            const bufferZone = 50; // Added buffer zone around text
 
             // Generate random position
             let x, y;
             do {
                 x = Math.random() * canvas.width;
-                y = Math.random() * (canvas.height - headerHeight) + headerHeight; // Keep targets below header
+                y = Math.random() * (canvas.height - headerHeight) + headerHeight;
             } while (
-                x > textAreaX - textAreaWidth / 2 &&
-                x < textAreaX + textAreaWidth / 2 &&
-                y > textAreaY - textAreaHeight / 2 &&
-                y < textAreaY + textAreaHeight / 2
+                // Check if position is within the expanded text area plus buffer
+                x > textAreaX - textAreaWidth / 2 - bufferZone &&
+                x < textAreaX + textAreaWidth / 2 + bufferZone &&
+                y > textAreaY - textAreaHeight / 2 - bufferZone &&
+                y < textAreaY + textAreaHeight / 2 + bufferZone
             );
 
             targets.push({
@@ -129,22 +130,23 @@ const Hero = () => {
 
                         // Only respawn if we have fewer than 3 targets
                         if (targets.length < 3) {
-                            // Create a new target away from text
+                            // Create a new target away from text with larger buffer zones
                             const textAreaX = canvas.width / 2;
                             const textAreaY = canvas.height / 2;
-                            const textAreaWidth = canvas.width * 0.7;
-                            const textAreaHeight = canvas.height * 0.4;
-                            const headerHeight = 100;
+                            const textAreaWidth = canvas.width * 0.8;
+                            const textAreaHeight = canvas.height * 0.5;
+                            const headerHeight = 150;
+                            const bufferZone = 50;
 
                             let x, y;
                             do {
                                 x = Math.random() * canvas.width;
                                 y = Math.random() * (canvas.height - headerHeight) + headerHeight;
                             } while (
-                                x > textAreaX - textAreaWidth / 2 &&
-                                x < textAreaX + textAreaWidth / 2 &&
-                                y > textAreaY - textAreaHeight / 2 &&
-                                y < textAreaY + textAreaHeight / 2
+                                x > textAreaX - textAreaWidth / 2 - bufferZone &&
+                                x < textAreaX + textAreaWidth / 2 + bufferZone &&
+                                y > textAreaY - textAreaHeight / 2 - bufferZone &&
+                                y < textAreaY + textAreaHeight / 2 + bufferZone
                             );
 
                             targets.push({
@@ -320,63 +322,29 @@ const Hero = () => {
     }, []);
 
     return (
-        <motion.section
-            className="hero"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-        >
+        <section className="hero">
             <canvas ref={canvasRef} className="hero-game-canvas" />
-            <motion.div
-                className="hero-content"
-                initial={{ y: 100 }}
-                animate={{ y: 0 }}
-                transition={{ type: "spring", stiffness: 100 }}
-            >
+            <div className="hero-content">
                 <h1>
-                    <motion.span
-                        initial={{ x: -1000 }}
-                        animate={{ x: 0 }}
-                        transition={{ type: "spring", stiffness: 100 }}
-                    >
-                        Meet
-                    </motion.span>
-                    <motion.span
-                        className="name"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.5 }}
-                    >
-                        [Deiv]
-                    </motion.span>
+                    <span>Meet</span>
+                    <span className="name">[Deiv]</span>
                 </h1>
-                <motion.h2
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                >
-                    Software Engineer @ AWS Dublin 🇮🇪
-                </motion.h2>
+                <h2>Software Engineer @ AWS Dublin 🇮🇪</h2>
 
                 {window.innerWidth >= 1024 && (
                     <div className="controls-hint">Use WASD to move tank, E to shoot</div>
                 )}
 
-                <motion.div
-                    className="social-links"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.3 }}
-                >
+                <div className="social-links">
                     <a href="https://github.com/YourGitHubUsername" target="_blank" rel="noopener noreferrer">
                         <i className="fab fa-github"></i> GitHub
                     </a>
                     <a href="https://www.linkedin.com/in/YourLinkedInUsername" target="_blank" rel="noopener noreferrer">
                         <i className="fab fa-linkedin"></i> LinkedIn
                     </a>
-                </motion.div>
-            </motion.div>
-        </motion.section>
+                </div>
+            </div>
+        </section>
     );
 };
 

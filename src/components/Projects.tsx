@@ -1,6 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import './Projects.css';
 
 // Add at the top of the file
@@ -44,16 +42,11 @@ const Projects = () => {
 
     return (
         <section id="projects" className="projects">
-            <motion.h2>Featured Projects</motion.h2>
+            <h2>Featured Projects</h2>
             <div className="projects-grid">
                 {projects.map((project, index) => (
-                    <motion.div
+                    <div
                         className="project-card"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.2 }}
-                        whileHover={{ scale: 1.05 }}
                         key={index}
                     >
                         <div className="project-image">
@@ -68,7 +61,7 @@ const Projects = () => {
                                 ))}
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
                 ))}
             </div>
             {/* <div className="view-all-projects">

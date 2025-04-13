@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import React from 'react';
 import './Experience.css';
 
 const Experience = () => {
@@ -24,62 +22,22 @@ const Experience = () => {
         // Add more experiences
     ];
 
-    const [ref, inView] = useInView({
-        triggerOnce: true,
-        threshold: 0.1
-    });
-
-    // Fun bouncy animation variants
-    const headingVariants = {
-        hidden: { opacity: 0, y: -50 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 10
-            }
-        }
-    };
-
     return (
         <section id="experience" className="experience-section">
-            <motion.div className="experience-header">
-                <motion.h2
-                    variants={headingVariants}
-                    initial="hidden"
-                    animate={inView ? "visible" : "hidden"}
-                    className="rainbow-text"
-                >
+            <div className="experience-header">
+                <h2 className="rainbow-text">
                     Professional Experience
-                </motion.h2>
-                <motion.div>
+                </h2>
+                <div>
                     💻✨
-                </motion.div>
-            </motion.div>
+                </div>
+            </div>
 
-            <div className="timeline" ref={ref}>
+            <div className="timeline">
                 {experiences.map((exp, index) => (
-                    <motion.div
+                    <div
                         key={index}
                         className="timeline-item"
-                        initial={{
-                            x: index % 2 === 0 ? -100 : 100,
-                            opacity: 0,
-                            rotate: index % 2 === 0 ? -5 : 5
-                        }}
-                        animate={{
-                            x: inView ? 0 : (index % 2 === 0 ? -100 : 100),
-                            opacity: inView ? 1 : 0,
-                            rotate: inView ? 0 : (index % 2 === 0 ? -5 : 5)
-                        }}
-                        transition={{
-                            delay: index * 0.2,
-                            type: "spring",
-                            stiffness: 200,
-                            damping: 20
-                        }}
                         style={{
                             borderColor: exp.color,
                             background: "transparent"
@@ -92,25 +50,20 @@ const Experience = () => {
                             <p>{exp.description}</p>
                             <div className="tech-stack">
                                 {exp.tech.map(tech => (
-                                    <motion.span
+                                    <span
                                         key={tech}
                                         className="tech-tag"
-                                        whileHover={{
-                                            scale: 1.2,
-                                            rotate: [0, 5, -5, 0],
-                                            transition: { duration: 0.5 }
-                                        }}
                                         style={{
                                             background: "rgba(100, 255, 218, 0.1)",
                                             color: "#64ffda"
                                         }}
                                     >
                                         {tech}
-                                    </motion.span>
+                                    </span>
                                 ))}
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
                 ))}
             </div>
         </section>

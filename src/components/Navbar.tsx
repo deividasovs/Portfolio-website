@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -16,31 +15,23 @@ const Navbar: React.FC<NavbarProps> = ({ activeSection, setActiveSection }) => {
   };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 100 }}
-      className="navbar"
-    >
+    <nav className="navbar">
       <div className="nav-content">
-        <motion.div
-          className="logo"
-        >
-
-        </motion.div>
+        <div className="logo">
+        </div>
         <div className="nav-links">
           {sections.map((section) => (
-            <motion.button
+            <button
               key={section}
               className={`nav-item ${activeSection === section ? 'active' : ''}`}
               onClick={() => scrollToSection(section)}
             >
               {section.charAt(0).toUpperCase() + section.slice(1)}
-            </motion.button>
+            </button>
           ))}
         </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 };
 
