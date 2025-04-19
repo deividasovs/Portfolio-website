@@ -334,15 +334,6 @@ const Hero = () => {
                 {window.innerWidth >= 1024 && (
                     <div className="controls-hint">Use WASD to move tank, E to shoot</div>
                 )}
-
-                <div className="social-links">
-                    <a href="https://github.com/YourGitHubUsername" target="_blank" rel="noopener noreferrer">
-                        <i className="fab fa-github"></i> GitHub
-                    </a>
-                    <a href="https://www.linkedin.com/in/YourLinkedInUsername" target="_blank" rel="noopener noreferrer">
-                        <i className="fab fa-linkedin"></i> LinkedIn
-                    </a>
-                </div>
             </div>
         </section>
     );

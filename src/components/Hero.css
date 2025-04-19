@@ -1,11 +1,12 @@
 .hero {
-    min-height: 5vh;
+    min-height: 50vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #1a1a1a 0%, #0a192f 100%);
     position: relative;
     overflow: hidden;
+    width: 100%;
 }
 
 .hero-content {
@@ -14,6 +15,12 @@
     z-index: 2;
     position: relative;
     pointer-events: auto;
+    border: 1px solid rgba(100, 255, 218, 0.5);
+    padding: 2rem;
+    border-radius: 4px;
+    background-color: rgba(10, 25, 47, 0.3);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 10px rgba(100, 255, 218, 0.1);
 }
 
 .name {

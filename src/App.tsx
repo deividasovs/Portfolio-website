@@ -6,6 +6,7 @@ import Experience from './components/Experience';
 import Projects from './components/Projects';
 import ProjectsPage from './pages/ProjectsPage';
 import ParticleBackground from './components/ParticleBackground';
+import Footer from './components/Footer';
 import './App.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Experience />
         <Projects />
       </main>
+      <Footer />
     </div>
   );
 

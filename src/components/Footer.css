@@ -1,0 +1,34 @@
+.footer {
+    background: linear-gradient(135deg, #0a192f 0%, #1a1a1a 100%);
+    padding: 40px 20px;
+    text-align: center;
+    color: #fff;
+    width: 100%;
+    z-index: 10;
+    position: relative;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    display: flex;
+    align-items: center;
+    color: #64ffda;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.social-links a i {
+    margin-right: 8px;
+}
+
+.social-links a:hover {
+    color: #ccd6f6;
+    transform: translateY(-3px);
+}
