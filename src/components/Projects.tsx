@@ -14,40 +14,26 @@ interface Project {
 const Projects = () => {
     const projects: Project[] = [
         {
-            title: "AI-Powered Trading Platform",
-            description: "A sophisticated trading platform using machine learning algorithms to predict market trends and execute automated trades.",
-            tech: ["Python", "TensorFlow", "React", "Node.js"],
-            image: "/images/trading-platform.jpg",
-            github: "https://github.com/yourusername/trading-platform",
-            demo: "https://trading-platform.com"
-        },
-        {
-            title: "Real-time Collaboration Tool",
-            description: "A WebSocket-based collaboration tool allowing multiple users to edit documents simultaneously with conflict resolution.",
-            tech: ["TypeScript", "Socket.io", "Redis", "React"],
-            image: "/images/collab-tool.jpg",
-            github: "https://github.com/yourusername/collab-tool",
-            demo: "https://collab-tool.com"
-        },
-        {
-            title: "Blockchain Voting System",
-            description: "A secure and transparent voting system built on Ethereum blockchain, ensuring tamper-proof election results.",
-            tech: ["Solidity", "Web3.js", "React", "Node.js"],
-            image: "/images/blockchain-voting.jpg",
-            github: "https://github.com/yourusername/blockchain-voting",
-            demo: "https://blockchain-voting.com"
-        },
+            title: "BlockyList",
+            description: "Template your Spotify playlists using blocks of playlists and songs",
+            tech: ["React", "Typescript", "TailwindCSS", "Spotify Web API", "Firebase"],
+            image: "../images/BlockyList.png",
+            github: "https://github.com/deividasovs/BlockyList",
+            demo: "https://deividasovs.github.io/BlockyList"
+        }
         // Add more projects as needed
     ];
 
     return (
         <section id="projects" className="projects">
-            <h2>Featured Projects</h2>
+            <h2>Things I'm tinkering with</h2>
             <div className="projects-grid">
                 {projects.map((project, index) => (
                     <div
                         className="project-card"
                         key={index}
+                        onClick={() => window.open(project.demo, '_blank')}
+                        style={{ cursor: 'pointer' }}
                     >
                         <div className="project-image">
                             <img src={project.image} alt={project.title} />
@@ -59,6 +45,11 @@ const Projects = () => {
                                 {project.tech.map(tech => (
                                     <span key={tech}>{tech}</span>
                                 ))}
+                            </div>
+                            <div className="project-links">
+                                <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                    <i className="fab fa-github"></i>
+                                </a>
                             </div>
                         </div>
                     </div>

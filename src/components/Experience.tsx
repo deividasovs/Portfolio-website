@@ -4,29 +4,44 @@ import './Experience.css';
 const Experience = () => {
     const experiences = [
         {
-            company: "Amazon Web Services",
-            position: "Software Engineer",
-            period: "2024 - Present",
-            description: "Led development of high-performance trading systems using React and TypeScript. Improved system efficiency by 40%.",
+            company: "Amazon Web Services - CloudWatch",
+            position: "Software Develoment Engineer",
+            period: "Sep 2024 - Present",
+            description: "",//"Led development of high-performance trading systems using React and TypeScript. Improved system efficiency by 40%.",,
             tech: [],//["React", "TypeScript", "Node.js", "AWS"],
             color: "#5CE1E6" // Bright red
         },
         {
-            company: "Amazon Web Services",
-            position: "Software Engineer",
-            period: "2023 - 2024",
-            description: "Built scalable microservices architecture. Implemented real-time data processing pipeline.",
+            company: "Amazon Web Services - L7 Load Balancing",
+            position: "Software Develoment Engineer",
+            period: "Sep 2023 - Sep 2024",
+            description: "",//"Built scalable microservices architecture. Implemented real-time data processing pipeline.",
             tech: [], //["Python", "Django", "React", "Docker"],
             color: "#5CE1E6" // Bright cyan
         },
-        // Add more experiences
+        {
+            company: "Innovation Value Institute",
+            position: "Software Engineer",
+            period: "Feb 2023 - May 2023",
+            description: "",//"Built scalable microservices architecture. Implemented real-time data processing pipeline.",
+            tech: [], //["Python", "Django", "React", "Docker"],\
+            color: "#5CE1E6" // Bright cyan
+        },
+        {
+            company: "Amazon Web Services - L7 Load Balancing",
+            position: "Software Develoment Engineer Intern",
+            period: "Feb 2022 - Jul 2022",
+            description: "",//"Built scalable microservices architecture. Implemented real-time data processing pipeline.",
+            tech: [], //["Python", "Django", "React", "Docker"],\
+            color: "#5CE1E6" // Bright cyan
+        },
     ];
 
     return (
         <section id="experience" className="experience-section">
             <div className="experience-header">
                 <h2 className="rainbow-text">
-                    Professional Experience
+                    Work Experience
                 </h2>
                 <div>
                     💻✨
