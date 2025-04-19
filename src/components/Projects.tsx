@@ -17,7 +17,7 @@ const Projects = () => {
             title: "BlockyList",
             description: "Template your Spotify playlists using blocks of playlists and songs",
             tech: ["React", "Typescript", "TailwindCSS", "Spotify Web API", "Firebase"],
-            image: "../images/BlockyList.png",
+            image: "./images/BlockyList.png",
             github: "https://github.com/deividasovs/BlockyList",
             demo: "https://deividasovs.github.io/BlockyList"
         }
