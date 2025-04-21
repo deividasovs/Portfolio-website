@@ -20,8 +20,16 @@ const Projects = () => {
             image: "./images/BlockyList.png",
             github: "https://github.com/deividasovs/BlockyList",
             demo: "https://deividasovs.github.io/BlockyList"
+        },
+        {
+            title: "CodeSnap",
+            description: "Multiple choice leetcode style puzzles",
+            tech: ["Vite", "Typescript", "TailwindCSS"],
+            image: "./images/CodeSnap.png",
+            github: "https://github.com/cameronkenny-101/CodeSnap",
+            demo: "https://cameronkenny-101.github.io/CodeSnap/"
         }
-        // Add more projects as needed
+
     ];
 
     return (
