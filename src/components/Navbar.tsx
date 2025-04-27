@@ -19,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ activeSection, setActiveSection }) => {
       <div className="nav-content">
         <div className="logo">
         </div>
-        <div className="nav-links">
+        {/* <div className="nav-links">
           {sections.map((section) => (
             <button
               key={section}
@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ activeSection, setActiveSection }) => {
               {section.charAt(0).toUpperCase() + section.slice(1)}
             </button>
           ))}
-        </div>
+        </div> */}
       </div>
     </nav>
   );

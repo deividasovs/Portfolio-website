@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Hero.css';
 
 const Hero = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -18,6 +19,9 @@ const Hero = () => {
             // Don't initialize game on small screens
             return;
         }
+
+        // Track initialization state
+        let isGameInitialized = false;
 
         // Set canvas dimensions
         canvas.width = canvas.offsetWidth;
@@ -96,6 +100,42 @@ const Hero = () => {
             if (e.key === 'e') keys.e = false;
         };
 
+        // Focus event handlers to ensure the game responds to keyboard input
+        const handleFocus = () => {
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('keyup', handleKeyUp);
+        };
+
+        const handleBlur = () => {
+            // Reset all keys when focus is lost to prevent stuck keys
+            keys.w = false;
+            keys.a = false;
+            keys.s = false;
+            keys.d = false;
+            keys.e = false;
+
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
+
+        // Add click handler to canvas to ensure it gets focus
+        const handleCanvasClick = () => {
+            // Make sure event listeners are attached when canvas is clicked
+            handleFocus();
+
+            // If game isn't initialized yet or got paused, restart it
+            if (!isGameInitialized) {
+                isGameInitialized = true;
+                requestAnimationFrame(gameLoop);
+            }
+        };
+
+        // Attach focus-related event listeners
+        window.addEventListener('focus', handleFocus);
+        window.addEventListener('blur', handleBlur);
+        canvas.addEventListener('click', handleCanvasClick);
+
+        // Add keyboard event listeners initially
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
@@ -290,40 +330,89 @@ const Hero = () => {
 
             ctx.restore();
 
-            // Continue game loop
-            requestAnimationFrame(gameLoop);
+            // Continue game loop if game is still initialized
+            if (isGameInitialized) {
+                requestAnimationFrame(gameLoop);
+            }
         };
 
         // Start game loop
+        isGameInitialized = true;
         const animationId = requestAnimationFrame(gameLoop);
+        setIsInitialized(true);
+
+        // Auto-focus for better UX
+        setTimeout(() => {
+            if (canvas && document.activeElement !== canvas) {
+                canvas.focus();
+                handleFocus();
+            }
+        }, 500);
 
         // Add window resize listener to handle responsive behavior
         const handleResize = () => {
             if (window.innerWidth < 1024) {
                 // Clean up game if screen becomes too small
+                isGameInitialized = false;
                 window.removeEventListener('keydown', handleKeyDown);
                 window.removeEventListener('keyup', handleKeyUp);
                 cancelAnimationFrame(animationId);
 
                 // Clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+            } else {
+                // Reinitialize if screen size becomes large enough
+                if (!isGameInitialized) {
+                    isGameInitialized = true;
+                    requestAnimationFrame(gameLoop);
+                    handleFocus();
+                }
             }
         };
 
         window.addEventListener('resize', handleResize);
 
+        // Add message handler to help debug and recover
+        const messageHandler = (e: MessageEvent) => {
+            if (e.data === 'restartGame' && !isGameInitialized) {
+                isGameInitialized = true;
+                requestAnimationFrame(gameLoop);
+                handleFocus();
+            }
+        };
+
+        window.addEventListener('message', messageHandler);
+
         // Cleanup
         return () => {
+            isGameInitialized = false;
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
             window.removeEventListener('resize', handleResize);
+            window.removeEventListener('focus', handleFocus);
+            window.removeEventListener('blur', handleBlur);
+            window.removeEventListener('message', messageHandler);
+            canvas.removeEventListener('click', handleCanvasClick);
             cancelAnimationFrame(animationId);
         };
     }, []);
 
+    const handleCanvasClick = () => {
+        // Force restart if game isn't working
+        if (!isInitialized) {
+            window.postMessage('restartGame', '*');
+        }
+    };
+
     return (
         <section className="hero">
-            <canvas ref={canvasRef} className="hero-game-canvas" />
+            <canvas
+                ref={canvasRef}
+                className="hero-game-canvas"
+                tabIndex={-1}
+                onClick={handleCanvasClick}
+                style={{ pointerEvents: 'auto' }}
+            />
             <div className="hero-content">
                 <h1>
                     <span>Meet</span>
@@ -332,7 +421,10 @@ const Hero = () => {
                 <h2>Software Engineer @ AWS Dublin 🇮🇪</h2>
 
                 {window.innerWidth >= 1024 && (
-                    <div className="controls-hint">Use WASD to move tank, E to shoot</div>
+                    <div className="controls-hint">
+                        Use WASD to move tank, E to shoot
+                        {!isInitialized && <span> (click game area if tank doesn't move)</span>}
+                    </div>
                 )}
             </div>
         </section>
